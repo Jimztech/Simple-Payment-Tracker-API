@@ -19,4 +19,18 @@ const server = app.listen(PORT, () => {
 })
 
 // Shutting down the server 
-process.on()
+process.on('SIGTERM', () => {
+    console.log('SIGTERM signal received: closing HTTP server');
+    server.close(() => {
+        console.log('HTTP server closed');
+        pool.end(() => {
+            console.log('Database pool closed');
+            process.exit(0);
+        });
+    });
+});
+
+process.on('unhandledRejection', (err) => {
+    console.error('Unhandled Rejection:', err);
+    server.close(() => process.exit(1))
+})
