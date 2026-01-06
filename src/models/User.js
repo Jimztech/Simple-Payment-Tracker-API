@@ -13,4 +13,18 @@ const User = {
     },
 
     // Find user by email
-}
+    async findEmail(email) {
+        const query = 'SELECT * FROM users WHERE email = $1';
+        const result = await pool.query(query, [email]);
+        return result.rows[0];
+    },
+
+    // Find user by ID
+    async findById(id) {
+        const query = 'SELECT id, email, full_name, created_at FROM users WHERE id = $1';
+        const result = await pool.query(query, [id]);
+        return result.rows[0];
+    }
+};
+
+module.exports = User;
